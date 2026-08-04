@@ -1,15 +1,15 @@
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 
 public class MY_P42628 {
 	static StringBuilder sb;
 	static StringTokenizer tk;
-	// 최소, 최댓값을 자주 Delete하기 때문에 LinkedList가 좋다고 판단
-	static LinkedList<Integer> q;
+	// 트리맵이 효율적이라고 함
+	static TreeMap<Integer, Integer> map;
 	
 	public static int[] solution(String[] operations) {
-		q = new LinkedList<>();
+		map = new TreeMap<>();
 		
 		for (String oper: operations) {
 			tk = new StringTokenizer(oper);
@@ -18,11 +18,12 @@ public class MY_P42628 {
 			
 			switch(operation) {
 				case "I": {
-					addList(num);
+					// map.getOrDefault: 있으면 value, 없으면 default(인자2)
+					map.put(num, map.getOrDefault(num, 0) + 1);
 					break;
 				}
 				case "D": {
-					if (q.size() == 0) continue;
+					if (map.size() == 0) continue;
 					removeList(num);
 					break;
 				}
@@ -33,37 +34,24 @@ public class MY_P42628 {
 			
 		}
 		
-		if (q.size() == 0) 
+		if (map.size() == 0) 
 			return new int[] {0, 0};
-        int[] answer = {q.getLast(), q.getFirst()};
+        int[] answer = {map.lastKey(), map.firstKey()};
         return answer;
     }
 	
-	public static void addList(int num) {
-		// 
-		int idx = 0;
-		while(idx < q.size() && q.get(idx) <= num) {
-			idx++;
-		}
-//		System.out.println("size : " + q.size() + "index : " + idx);
-		q.add(idx, num);
-	}
-	
 	public static void removeList(int num) {
-
-		switch (num) {
-		case 1: {
-			q.removeLast();
-			break;
-		}
-		case -1: {
-			q.poll();
-			break;
-		}
-		default: {
-			break;
-		}
-		}
+		int key;
+		if (num == 1) 
+			key = map.lastKey();
+		else
+			key = map.firstKey();
+		
+		// 하나밖에 없으면 삭제
+		if (map.get(key) == 1) 
+			map.remove(key);
+		else
+			map.put(num, map.get(key) + 1);
 	}
 	
 	public static void main(String[] args) {
