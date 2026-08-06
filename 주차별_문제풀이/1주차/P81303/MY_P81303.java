@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
 
@@ -46,10 +44,6 @@ public class MY_P81303 {
 	
 	public static void inspectTable() {
 		int idx = head;
-		if (prev[cur] == -1 && next[cur] == N) {
-			sb.append("X".repeat(N));
-			return;
-		}
 		for (int i = 0; i < N; i++) {
 			if (i != idx) sb.append("X");
 			else {
@@ -76,10 +70,14 @@ public class MY_P81303 {
 			}
 			move(1, false);
 		} else if (oper.equals("Z")){
-			if (drList.size() == 0) return;
 			DeletedRow dr = drList.pollLast();
 			if (dr.prev != -1) next[dr.prev] = dr.cur;
 			if (dr.next != N) prev[dr.next] = dr.cur;
+            
+            // 맨 앞의 원소를 복구할 때 head 원위치
+            if(next[dr.cur] == head) {
+                head = dr.cur;
+            }
 		}
 	}
 	
@@ -110,8 +108,9 @@ public class MY_P81303 {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(solution(2, 1, new String[] { "C", "C", "C", "U 5", "U 5", "D 2" }));
+		System.out.println(solution(2, 1, new String[] { "C", "U 5", "U 5", "D 2" }));
 		System.out.println(solution(8, 2, new String[] { "D 2", "C", "U 3", "C", "D 4", "C", "U 2", "Z", "Z" }));
+		System.out.println(solution(8, 7, new String[] { "C", "C", "C", "Z", "Z" }));
 	}
 
 }
