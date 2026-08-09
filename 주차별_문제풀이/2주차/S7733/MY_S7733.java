@@ -40,12 +40,8 @@ public class MY_S7733 {
 				visited = new boolean[N][N]; // 먹혔거나 탐색했으면 True
 				for (int r = 0; r < N; r++) {
 					for (int c = 0; c < N; c++) {
-						if (visited[r][c]) continue;
+						if (visited[r][c] || arr[r][c] <= day) continue;
 						// day일에 r, c 위치의 덩어리 계산 및 visited 처리
-						if (arr[r][c] <= day) {
-							visited[r][c] = true;
-							continue;
-						}
 						dayResult += countCheese(day, r, c);
 					}
 				}
@@ -69,10 +65,7 @@ public class MY_S7733 {
 			for (int d = 0; d < 4; d++) {
 				int nx = x + dx[d];
 				int ny = y + dy[d];
-				if (!isValid(nx, ny) || visited[nx][ny]) {
-					continue;
-				} else if (arr[nx][ny] <= day) {
-					visited[nx][ny] = true;
+				if (!isValid(nx, ny) || visited[nx][ny] || arr[nx][ny] <= day) {
 					continue;
 				} else {
 					q.offer(new Pos(nx, ny));
