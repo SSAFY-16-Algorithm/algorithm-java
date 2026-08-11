@@ -4,7 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.Scanner;
 
-public class WH_S4193 {
+public class WH_S7793 {
 	
 	public static int N;
 	public static int M;
