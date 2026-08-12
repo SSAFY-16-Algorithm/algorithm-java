@@ -1,7 +1,10 @@
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -22,6 +25,7 @@ public class MY_C2025SamsungTest1 {
 	static Map<Integer, int[]> packageList;
 	static SortedMap<Integer, Integer> unloadList;
 	static Set<Integer> downSet;
+	static Deque<Integer> downQueue;
 
 	public static void main(String[] args) throws Exception {
 		System.setIn(new FileInputStream("res/input.txt"));
@@ -41,14 +45,18 @@ public class MY_C2025SamsungTest1 {
 			c = Integer.parseInt(st.nextToken());
 			packageList.put(k, new int[] { h, w, -1, -1 });
 			down(k, h, w, c);
-			for (int r = 0; r < N; r++) {
+//			for (int r = 0; r < N; r++) {
 //                System.out.println(Arrays.toString(arr[r]));
-			}
+//			}
 
+		}
+		for (int r = 0; r < N; r++) {
+            System.out.println(Arrays.toString(arr[r]));
 		}
 		// 꺼낼 수 있는 후보들을 넣는 큐
 		unloadList = new TreeMap<>();
 		downSet = new HashSet<>();
+		downQueue = new ArrayDeque<>();
 		unload();
 
 	}
@@ -85,9 +93,8 @@ public class MY_C2025SamsungTest1 {
 				}
 			}
 			
-			int num = 0;
 			for (Map.Entry<Integer, Integer> entry : unloadList.entrySet()) {
-				num = entry.getKey();
+				int num = entry.getKey();
 				int inspectH = entry.getValue();
 
 				// 가장 작은 번호의 택배 높이가 전부 관측되는 경우
@@ -98,30 +105,76 @@ public class MY_C2025SamsungTest1 {
 					int rowIndex = packageList.get(num)[2];
 					int colIndex = packageList.get(num)[3];
 					System.out.printf("%d %d\n", rowIndex, colIndex);
-					for (int r = rowIndex; r > rowIndex - packageList.get(num)[0]; r--) {
-						for (int c = colIndex; c < colIndex + packageList.get(num)[1]; c++) {
-							System.out.printf("%d %d %d %d\n", rowIndex, colIndex, r, c);
+					
+					for (int c = colIndex; c < colIndex + packageList.get(num)[1]; c++) {
+						// 하차하기 때문에 list 숫자를 0 으로 변경
+						for (int r = rowIndex; r > rowIndex - packageList.get(num)[0]; r--) {
+//							System.out.printf("%d %d %d %d\n", rowIndex, colIndex, r, c);
 							arr[r][c] = 0;
 						}
+						// 위에서부터 다운할 수 있는 짐 번호 추가
+						for (int r = rowIndex - packageList.get(num)[0]; r >= 0; r--) {
+							// 바로 위에 있는 짐이 있다면 추가
+							if(arr[r][c] != 0) downSet.add(arr[r][c]);
+						}
 					}
-					System.out.println(num);
+					
+					downQueue.addAll(downSet);
+					downSet.clear();
+					downQueue.remove(num);
 					packageList.remove(num);
 					break;
 				}
 			}
 			
-//			int rowIndex = packageList.get(num)[2];
-//			int colIndex = packageList.get(num)[3];
-//			for (int r = 0; r <= rowIndex - packageList.get(num)[0]; r++) {
-//				for (int c = colIndex; c < colIndex + packageList.get(num)[1]; c++) {
-//					downSet.add(arr[r][c]);
-//				}
-//			}
-//			
-//			// 다운할  후보들 검사
-//			while(!downSet.isEmpty()) {
-//				
-//			}
+			
+			// 다운할  후보들 검사
+			while(!downQueue.isEmpty()) {
+				int num = downQueue.poll();
+				System.out.println(num);
+				int[] isAbleToDown = new int[packageList.get(num)[1]];
+				int rowIndex = packageList.get(num)[2];
+				int colIndex = packageList.get(num)[3];
+
+				// 아래로 얼마나 내려갈 수 있는지 검사
+				for (int r = rowIndex + 1; r < N; r++) {
+					for (int c = colIndex; c < colIndex + packageList.get(num)[1]; c++) {
+						if (arr[r][c] == 0) {
+							System.out.printf("colIndex: %d, c: %d\n", colIndex, c);
+							isAbleToDown[c - colIndex]++;
+						} else break;
+					}
+				}
+				
+				int downNum = Integer.MAX_VALUE;
+				for (int i = 0; i < packageList.get(num)[1]; i++) {
+					downNum = Math.min(downNum, isAbleToDown[i]);
+				}
+				if (downNum == Integer.MAX_VALUE) continue;
+				
+				downSet.addAll(downQueue);
+
+				// 원래 있던 자리에서 0으로 변경 하고 그 위에 있는 짐을 다시 추가
+				for (int c = colIndex; c < colIndex + packageList.get(num)[1]; c++) {
+					// 하차하기 때문에 list 숫자를 0 으로 변경
+					for (int r = rowIndex; r > rowIndex - packageList.get(num)[0]; r--) {
+//						System.out.printf("%d %d %d %d\n", rowIndex, colIndex, r, c);
+						arr[r][c] = 0;
+					}
+					// 위에서부터 다운할 수 있는 짐 번호 추가
+					for (int r = rowIndex - packageList.get(num)[0]; r >= 0; r--) {
+						// 바로 위에 있는 짐이 있다면 추가
+						if(arr[r][c] != 0) downSet.add(arr[r][c]);
+					}
+				}
+				
+				// 내려갈 수 있는 칸만큼 다시 내려가기
+				
+
+				downQueue.remove(num);
+				
+				// 실제로 내려간 뒤에 바로 위에 영향을 받은 짐에 대해서 또 큐에 넣기
+			}
 
 			// 한 번 꺼내고 후보군은 리셋
 			unloadList.clear();
