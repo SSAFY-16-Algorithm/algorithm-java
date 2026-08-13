@@ -11,7 +11,7 @@ import java.util.SortedMap;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
-public class MY_C2025SamsungTest1 {
+public class MY_C2025H2AM1 {
 
 	static BufferedReader br;
 	static StringBuilder sb;
@@ -26,7 +26,7 @@ public class MY_C2025SamsungTest1 {
 	static Deque<Integer> downQueue;
 
 	public static void main(String[] args) throws Exception {
-		System.setIn(new FileInputStream("res/input.txt"));
+		System.setIn(new FileInputStream("res/C2025H2AM1/input.txt"));
 		br = new BufferedReader(new InputStreamReader(System.in));
 
 		st = new StringTokenizer(br.readLine());
@@ -43,14 +43,14 @@ public class MY_C2025SamsungTest1 {
 			c = Integer.parseInt(st.nextToken());
 			packageList.put(k, new int[] { h, w, -1, -1 });
 			down(k, h, w, c);
-//			for (int r = 0; r < N; r++) {
+//            for (int r = 0; r < N; r++) {
 //                System.out.println(Arrays.toString(arr[r]));
-//			}
+//            }
 
 		}
-//		for (int r = 0; r < N; r++) {
-//			System.out.println(Arrays.toString(arr[r]));
-//		}
+//        for (int r = 0; r < N; r++) {
+//            System.out.println(Arrays.toString(arr[r]));
+//        }
 		// 꺼낼 수 있는 후보들을 넣는 큐
 		unloadList = new TreeMap<>();
 		downSet = new HashSet<>();
@@ -64,7 +64,7 @@ public class MY_C2025SamsungTest1 {
 		boolean isLeft = true;
 		while (!packageList.isEmpty()) {
 			if (isLeft) {
-//				System.out.println("좌측에서 빼기");
+//                System.out.println("좌측에서 빼기");
 				// 좌측
 				for (int r = 0; r < N; r++) {
 					for (int c = 0; c < N; c++) {
@@ -77,7 +77,7 @@ public class MY_C2025SamsungTest1 {
 					}
 				}
 			} else {
-//				System.out.println("우측에서 빼기");
+//                System.out.println("우측에서 빼기");
 				// 우측
 				for (int r = N - 1; r >= 0; r--) {
 					for (int c = N - 1; c >= 0; c--) {
@@ -99,17 +99,17 @@ public class MY_C2025SamsungTest1 {
 				// list에서 값을 0으로 만들고
 				// packageList에서도 삭제
 				if (packageList.get(num)[0] == inspectH) {
-//					System.out.printf("하차할 번호: %d\n", num);
+//                    System.out.printf("하차할 번호: %d\n", num);
 					System.out.println(num);
 					int rowIndex = packageList.get(num)[2];
 					int colIndex = packageList.get(num)[3];
-//					System.out.printf("하차할 인덱스: %d %d\n", rowIndex, colIndex);
-//					System.out.printf("짐 높이: %d\n", packageList.get(num)[0]);
+//                    System.out.printf("하차할 인덱스: %d %d\n", rowIndex, colIndex);
+//                    System.out.printf("짐 높이: %d\n", packageList.get(num)[0]);
 
 					for (int c = colIndex; c < colIndex + packageList.get(num)[1]; c++) {
 						// 하차하기 때문에 list 숫자를 0 으로 변경
 						for (int r = rowIndex; r > rowIndex - packageList.get(num)[0]; r--) {
-//							System.out.printf("%d %d %d %d\n", rowIndex, colIndex, r, c);
+//                            System.out.printf("%d %d %d %d\n", rowIndex, colIndex, r, c);
 							arr[r][c] = 0;
 						}
 						// 위에서부터 다운할 수 있는 짐 번호 추가
@@ -120,7 +120,7 @@ public class MY_C2025SamsungTest1 {
 							// 큐와 set은 동시에 관리해야함
 							if (arr[r][c] != 0 && downSet.add(arr[r][c])) {
 								downQueue.add(arr[r][c]);
-//								System.out.printf("내려올 수 있는 후보: %d\n",arr[r][c]);
+//                                System.out.printf("내려올 수 있는 후보: %d\n",arr[r][c]);
 							}
 						}
 					}
@@ -142,30 +142,27 @@ public class MY_C2025SamsungTest1 {
 				int[] isAbleToDown = new int[packageList.get(num)[1]];
 				int rowIndex = packageList.get(num)[2];
 				int colIndex = packageList.get(num)[3];
-//				System.out.printf("이번에 내려올 친구: %d, 행: %d\n",num, rowIndex);
+//                System.out.printf("이번에 내려올 친구: %d, 행: %d\n",num, rowIndex);
 
 				// 아래로 얼마나 내려갈 수 있는지 검사
-				for (int r = rowIndex + 1; r < N; r++) {
-//					System.out.println("r: " + r);
-					for (int c = colIndex; c < colIndex + packageList.get(num)[1]; c++) {
-						if (arr[r][c] == 0) {
-//							System.out.printf("colIndex: %d, c: %d\n", colIndex, c);
+				// row를 기준으로 검사하니까 장애물을 만나면 stop할 기준이 어려움
+				for (int c = colIndex; c < colIndex + packageList.get(num)[1]; c++) {
+					for (int r = rowIndex + 1; r < N; r++) {
+						if (arr[r][c] == 0)
 							isAbleToDown[c - colIndex]++;
-						} else
+						else
 							break;
 					}
-					if (isAbleToDown[0] < r - rowIndex)
-						break;
 				}
 
-//				System.out.printf("각 열별로 내려올 수 있는 수: " + Arrays.toString(isAbleToDown)+'\n');
+//                System.out.printf("각 열별로 내려올 수 있는 수: " + Arrays.toString(isAbleToDown)+'\n');
 
 				int downNum = Integer.MAX_VALUE;
 				for (int i = 0; i < packageList.get(num)[1]; i++) {
 					downNum = Math.min(downNum, isAbleToDown[i]);
 				}
 				if (downNum == 0) {
-//					System.out.println("내려갈 수 없어서 패스함");
+//                    System.out.println("내려갈 수 없어서 패스함");
 					continue;
 				}
 
@@ -173,37 +170,34 @@ public class MY_C2025SamsungTest1 {
 				for (int c = colIndex; c < colIndex + packageList.get(num)[1]; c++) {
 					// 하차하기 때문에 list 숫자를 0 으로 변경
 					for (int r = rowIndex; r > rowIndex - packageList.get(num)[0]; r--) {
-//						System.out.printf("%d %d %d %d\n", rowIndex, colIndex, r, c);
+//                        System.out.printf("%d %d %d %d\n", rowIndex, colIndex, r, c);
 						arr[r][c] = 0;
 					}
 					// 위에서부터 다운할 수 있는 짐 번호 추가
-					for (int r = rowIndex - packageList.get(num)[0]; r >= 0
-							&& r > rowIndex - packageList.get(num)[0] - 1; r--) {
-						// 바로 위에 있는 짐이 있다면 추가
-						if (arr[r][c] != 0 && downSet.add(arr[r][c])) {
-							downQueue.add(arr[r][c]);
-//							System.out.printf("다음으로 내려올 수 있는 후보 추가: %d\n",arr[r][c]);
-						}
+					int upperRow = rowIndex - packageList.get(num)[0];
+					if (upperRow >= 0 && arr[upperRow][c] != 0 && downSet.add(arr[upperRow][c])) {
+						downQueue.add(arr[upperRow][c]);
+//                                System.out.printf("다음으로 내려올 수 있는 후보 추가: %d\n",arr[r][c]);
 					}
 				}
-//				for (int r = 0; r < N; r++) {
-//					System.out.println(Arrays.toString(arr[r]));
-//				}
+//                for (int r = 0; r < N; r++) {
+//                    System.out.println(Arrays.toString(arr[r]));
+//                }
 
 				// 내려갈 수 있는 칸만큼 다시 내려가기
 				// rowIndex를 내려갈 수 있는만큼 갱신시키고 다시 숫자로 채우기
 				packageList.get(num)[2] = packageList.get(num)[2] + downNum;
 				rowIndex = packageList.get(num)[2];
-//				System.out.printf("최종적으로 내려갈 위치 : %d, %d\n", rowIndex, colIndex);
+//                System.out.printf("최종적으로 내려갈 위치 : %d, %d\n", rowIndex, colIndex);
 				for (int r = rowIndex; r > rowIndex - packageList.get(num)[0]; r--) {
 					for (int c = colIndex; c < colIndex + packageList.get(num)[1]; c++) {
 						arr[r][c] = num;
 					}
 				}
 
-//				for (int r = 0; r < N; r++) {
-//					System.out.println(Arrays.toString(arr[r]));
-//				}
+//                for (int r = 0; r < N; r++) {
+//                    System.out.println(Arrays.toString(arr[r]));
+//                }
 
 				// 자기 자신은 제외하기
 				downSet.remove(num);
@@ -215,58 +209,40 @@ public class MY_C2025SamsungTest1 {
 			// 한 번 꺼내고 후보군은 리셋
 			unloadList.clear();
 			isLeft = !isLeft;
-//			for (int r = 0; r < N; r++) {
-//				System.out.println(Arrays.toString(arr[r]));
-//			}
+//            for (int r = 0; r < N; r++) {
+//                System.out.println(Arrays.toString(arr[r]));
+//            }
 		}
 	}
 
 	static void down(int k, int h, int w, int p) {
 		// 가로로 수용가능한 행을 저장하는 배열
-		boolean[] isValid = new boolean[N];
-		// 아래에서부터 검사
-		for (int r = N - 1; r >= 0; r--) {
-			isValid[r] = true;
-			for (int c = p - 1; c < p - 1 + w; c++) {
-				// 비지 않으면 false로 변경
-//                System.out.printf("%d %d %d\n", r, c, arr[r][c]);
-				if (arr[r][c] != 0)
-					isValid[r] = false;
+		int num = k;
+		int rowIndex = 0;
+		int colIndex = p - 1;
+		int[] isAbleToDown = new int[w];
+		for (int c = colIndex; c < colIndex + packageList.get(num)[1]; c++) {
+			for (int r = rowIndex + 1; r < N; r++) {
+				if (arr[r][c] == 0)
+					isAbleToDown[c - colIndex]++;
+				else
+					break;
 			}
-			// 이미 불가능한 행이 되면 다음행 검사
-			if (!isValid[r])
-				continue;
 		}
 
-//        System.out.println(Arrays.toString(isValid));
+//        System.out.printf("각 열별로 내려올 수 있는 수: " + Arrays.toString(isAbleToDown)+'\n');
 
-		int rowIndex = -1;
-		if (h == 1) {
-			for (int r = N - 1; r >= 0; r--) {
-				if (isValid[r]) {
-					rowIndex = r;
-					break;
-				}
-			}
-		} else {
-			for (int r = N - 1; r >= 0 + h - 1; r--) {
-				boolean isValid2 = true;
-
-				for (int i = 0; i < h; i++) {
-					isValid2 = isValid[r - 1] && isValid[r];
-				}
-				if (isValid2) {
-					rowIndex = r;
-					break;
-				}
-			}
+		int downNum = Integer.MAX_VALUE;
+		for (int i = 0; i < packageList.get(num)[1]; i++) {
+			downNum = Math.min(downNum, isAbleToDown[i]);
 		}
+		packageList.get(num)[2] = rowIndex + downNum;
+		rowIndex = packageList.get(num)[2];
+		packageList.get(num)[3] = colIndex;
+
 		// 4,2 , h 2, p 5
-
-		packageList.get(k)[2] = rowIndex;
-		packageList.get(k)[3] = p - 1;
 		for (int r = rowIndex; r > rowIndex - h; r--) {
-			for (int c = p - 1; c < p - 1 + w; c++) {
+			for (int c = colIndex; c < colIndex + w; c++) {
 				arr[r][c] = k;
 			}
 		}
