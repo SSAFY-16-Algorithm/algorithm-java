@@ -4,11 +4,9 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -25,9 +23,9 @@ public class MY_S5648 {
 
 	static Deque<Atom> dq;
 	// 충돌 좌표 저장
-	static Set<Pos> comflictCoordinate;
+	static Set<Integer> conflictCoordinates;
 	// 충돌하지 않은 원소만 저장
-	static Map<Pos, Atom> atomList;
+	static Map<Integer, Atom> singleAtoms;
 	static int atomSize;
 	static int totalPower;
 
@@ -43,8 +41,8 @@ public class MY_S5648 {
 			// 저장된 원자
 			// 큐에 1000개 이상 담겨도 되려나?
 			dq = new ArrayDeque<>();
-			comflictCoordinate = new HashSet<>();
-			atomList = new HashMap<>();
+			conflictCoordinates = new HashSet<>();
+			singleAtoms = new HashMap<>();
 
 			// atomSize만큼 큐에 입력 후
 			// atom이 좌표를 벗어나거나 서로 부딪히는 경우 큐에서 삭제할 예정
@@ -80,24 +78,24 @@ public class MY_S5648 {
 			Atom curAtom = dq.poll();
 			curAtom.x = curAtom.x + dx[curAtom.moveIdx];
 			curAtom.y = curAtom.y + dy[curAtom.moveIdx];
+			int x1 = curAtom.x + 2000;
+			int y1 = curAtom.y + 2000;
 			// 좌표가 벗어나면 큐에서 삭제
 			// 속도가 같으니까 범위를 벗어나면 부딪힐 일 없다고 판단됨
 			if (!(curAtom.x < -2000 || curAtom.x > 2000 || curAtom.y < -2000 || curAtom.y > 2000)) {
-				Pos coor = new Pos(curAtom.x, curAtom.y);
+				int coordinate = x1 * 4001 + y1;
 				// 일단 충돌 좌표인지 검사
-				if (comflictCoordinate.contains(coor)) {
+				if (conflictCoordinates.contains(coordinate)) {
 					totalPower += curAtom.power;
-				}
-				else {
+				} else {
 					// 충돌하지 않은 것만 넣는 리스트
-					Atom comflictAtom = atomList.putIfAbsent(coor, curAtom);
-					
+					Atom conflictAtom = singleAtoms.putIfAbsent(coordinate, curAtom);
+
 					// 넣었는데 뭔가 나오면 충돌된 것
-					if (comflictAtom != null) {
-						totalPower += comflictAtom.power;
-						comflictCoordinate.add(coor);
-						atomList.remove(coor);
-						totalPower += curAtom.power;
+					if (conflictAtom != null) {
+						totalPower += conflictAtom.power + curAtom.power;
+						conflictCoordinates.add(coordinate);
+						singleAtoms.remove(coordinate);
 					}
 				}
 			}
@@ -105,12 +103,12 @@ public class MY_S5648 {
 			// 맵에 모두 넣다보면 dq가 비는 순간이 오는데 이때 map을 순회하기
 			// O(N^2) 가능성
 			// is Empty로 검사하면 비지 않아서 안 들어옴?
-			if (dq.size() ==0) {
-				for (Atom atom: atomList.values()) {
+			if (dq.size() == 0) {
+				for (Atom atom : singleAtoms.values()) {
 					dq.offer(atom);
 				}
-				comflictCoordinate.clear();
-				atomList.clear();
+				conflictCoordinates.clear();
+				singleAtoms.clear();
 			}
 		}
 	}
@@ -126,30 +124,6 @@ public class MY_S5648 {
 			this.y = y;
 			this.power = power;
 			this.moveIdx = moveIdx;
-		}
-	}
-
-	static class Pos {
-		final int x;
-		final int y;
-
-		Pos(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (obj == null) return false;
-			if (obj.getClass() != this.getClass())
-				return false;
-			Pos objPos = (Pos) obj;
-			return this.x == objPos.x && this.y == objPos.y;
-		}
-		
-		@Override
-		public int hashCode() {
-	        return 31 * x + y;
 		}
 	}
 }
