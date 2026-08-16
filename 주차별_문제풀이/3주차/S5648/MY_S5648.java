@@ -7,8 +7,10 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 public class MY_S5648 {
@@ -22,8 +24,10 @@ public class MY_S5648 {
 	static final int[] dx = { 0, 0, -1, 1 };
 
 	static Deque<Atom> dq;
-	// 키가 x 좌표, 그 다음 밸류의 키는 y좌표, 그 다음 밸류는 그 좌표에 존재하는 atom 리스트
-	static Map<Integer, Map<Integer, List<Atom>>> atomPosX;
+	// 충돌 좌표 저장
+	static Set<Pos> comflictCoordinate;
+	// 충돌하지 않은 원소만 저장
+	static Map<Pos, Atom> atomList;
 	static int atomSize;
 	static int totalPower;
 
@@ -39,7 +43,8 @@ public class MY_S5648 {
 			// 저장된 원자
 			// 큐에 1000개 이상 담겨도 되려나?
 			dq = new ArrayDeque<>();
-			atomPosX = new HashMap<>();
+			comflictCoordinate = new HashSet<>();
+			atomList = new HashMap<>();
 
 			// atomSize만큼 큐에 입력 후
 			// atom이 좌표를 벗어나거나 서로 부딪히는 경우 큐에서 삭제할 예정
@@ -72,35 +77,40 @@ public class MY_S5648 {
 		// 0초에는 어차피 안 부딪히니 바로 이동 시작
 		while (!dq.isEmpty()) {
 			// 원자를 꺼내서 좌표 이동 후 맵에 추가
-			Atom atom = dq.poll();
-			atom.x = atom.x + dx[atom.moveIdx];
-			atom.y = atom.y + dy[atom.moveIdx];
+			Atom curAtom = dq.poll();
+			curAtom.x = curAtom.x + dx[curAtom.moveIdx];
+			curAtom.y = curAtom.y + dy[curAtom.moveIdx];
 			// 좌표가 벗어나면 큐에서 삭제
 			// 속도가 같으니까 범위를 벗어나면 부딪힐 일 없다고 판단됨
-			if (!(atom.x < -2000 || atom.x > 2000 || atom.y < -2000 || atom.y > 2000)) {
-				atomPosX.computeIfAbsent(atom.x, k -> new HashMap<>()).computeIfAbsent(atom.y, k -> new ArrayList<Atom>())
-				.add(atom);
+			if (!(curAtom.x < -2000 || curAtom.x > 2000 || curAtom.y < -2000 || curAtom.y > 2000)) {
+				Pos coor = new Pos(curAtom.x, curAtom.y);
+				// 일단 충돌 좌표인지 검사
+				if (comflictCoordinate.contains(coor)) {
+					totalPower += curAtom.power;
+				}
+				else {
+					// 충돌하지 않은 것만 넣는 리스트
+					Atom comflictAtom = atomList.putIfAbsent(coor, curAtom);
+					
+					// 넣었는데 뭔가 나오면 충돌된 것
+					if (comflictAtom != null) {
+						totalPower += comflictAtom.power;
+						comflictCoordinate.add(coor);
+						atomList.remove(coor);
+						totalPower += curAtom.power;
+					}
+				}
 			}
 
 			// 맵에 모두 넣다보면 dq가 비는 순간이 오는데 이때 map을 순회하기
 			// O(N^2) 가능성
 			// is Empty로 검사하면 비지 않아서 안 들어옴?
 			if (dq.size() ==0) {
-				for (Map<Integer, List<Atom>> atomPosY : atomPosX.values()) {
-					for (List<Atom> atomList : atomPosY.values()) {
-						// 원자가 들어간 좌표마다 사이즈가 2이상이면 totalPower 계산후 버리기
-						if (atomList.size() > 1) {
-							totalPower += atomList.stream().mapToInt(a -> a.power).sum();
-
-						} else if (atomList.size() == 1) { // 좌표에 원소가 하나면 다시 넣기
-							dq.offer(atomList.get(0));
-						}
-						// 초기화
-						atomList.clear();
-					}
-					atomPosY.clear();
+				for (Atom atom: atomList.values()) {
+					dq.offer(atom);
 				}
-				atomPosX.clear();
+				comflictCoordinate.clear();
+				atomList.clear();
 			}
 		}
 	}
@@ -116,6 +126,30 @@ public class MY_S5648 {
 			this.y = y;
 			this.power = power;
 			this.moveIdx = moveIdx;
+		}
+	}
+
+	static class Pos {
+		final int x;
+		final int y;
+
+		Pos(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj == null) return false;
+			if (obj.getClass() != this.getClass())
+				return false;
+			Pos objPos = (Pos) obj;
+			return this.x == objPos.x && this.y == objPos.y;
+		}
+		
+		@Override
+		public int hashCode() {
+	        return 31 * x + y;
 		}
 	}
 }
