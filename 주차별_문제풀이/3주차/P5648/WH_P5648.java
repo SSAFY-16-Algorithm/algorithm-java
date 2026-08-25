@@ -1,9 +1,5 @@
 class Solution {
     public long solution(int n, int m, int x, int y, int[][] queries) {        
-        // 편의를 위해 문제에서 제시된 것의 역방향으로 설정해줌!
-        int[] dr={0,0,1,-1};
-        int[] dc={1,-1,0,0};
-        
         // 목적지가 시작점이 됨
         int minR = x;
         int maxR = x;
