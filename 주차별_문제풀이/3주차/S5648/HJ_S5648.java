@@ -1,57 +1,44 @@
 import java.io.*;
 import java.util.*;
 
-class Atom {
-	int x;
-	int y;
-	int dir;
-	int energy;
-	
-	Atom(int x, int y, int dir, int energy) {
-		this.x = x;
-		this.y = y;
-		this.dir = dir;
-		this.energy = energy;
-	}
-}
-
-class Position {
-	int x;
-	int y;
-	
-	Position(int x, int y){
-		this.x = x;
-		this.y = y;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(Integer.valueOf(x), Integer.valueOf(y));
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Position other = (Position) obj;
-		return x == other.x && y == other.y;
-	}
-}
-
 public class Solution {
+	
+	static final int LIMIT = 2000;
+    static final int SIZE = 4001;
+
+    // (x, y)를 하나의 key로 바꾼 뒤 상태를 저장
+    // 0  : 아직 원자 없음
+    // 양수: moved 리스트의 index + 1
+    // -1 : 이미 충돌이 발생한 위치
+    static int[] occupied = new int[SIZE * SIZE];
+	
+	static class Atom {
+		int x;
+		int y;
+		int dir;
+		int energy;
+		
+		Atom(int x, int y, int dir, int energy) {
+			this.x = x;
+			this.y = y;
+			this.dir = dir;
+			this.energy = energy;
+		}
+	}
+	
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 		int testCase = Integer.parseInt(br.readLine());
 		
+		int[] dx = {0,0,-1,1};
+		int[] dy = {1,-1,0,0};
+		
 		for (int tc = 1; tc <= testCase; tc++) {
-			int atom_num = Integer.parseInt(br.readLine());
+			int atomNum = Integer.parseInt(br.readLine());
 			List<Atom> atoms = new ArrayList<>();
 		
-			for (int i = 0; i < atom_num; i++) {
+			for (int i = 0; i < atomNum; i++) {
 				StringTokenizer st = new StringTokenizer(br.readLine());
 				int x = Integer.parseInt(st.nextToken())*2;
 				int y = Integer.parseInt(st.nextToken())*2;
@@ -62,11 +49,12 @@ public class Solution {
 			}
 			
 			int answer = 0;
-			int[] dx = {0,0,-1,1};
-			int[] dy = {1,-1,0,0};
 			
 			while(!atoms.isEmpty()) {
-				Map <Position, List<Atom>> map = new HashMap<>();
+				List<Atom> moved = new ArrayList<>(atoms.size());
+				
+				int[] touched = new int[atoms.size()];
+                int touchedCount = 0;
 				
 				for (Atom atom : atoms) {
 				    atom.x += dx[atom.dir];
@@ -77,32 +65,49 @@ public class Solution {
 				        continue;
 				    }
 
-				    Position pos = new Position(atom.x, atom.y);
+				    int key = (atom.x + LIMIT) * SIZE + (atom.y + LIMIT);
 
-				    if (!map.containsKey(pos)) {
-				        map.put(pos, new ArrayList<>());
-				    }
+                    if (occupied[key] == 0) {
+                    	moved.add(atom);
+                    	occupied[key] = moved.size();
+                    	touched[touchedCount++] = key;
+                    } else if (occupied[key] > 0) {
+                    	int index = occupied[key] - 1;
 
-				    map.get(pos).add(atom);
+                        Atom first = moved.get(index);
+
+                        // 첫 번째 원자 + 현재 원자 에너지
+                        answer += first.energy;
+                        answer += atom.energy;
+
+                        // 첫 번째 원자도 소멸
+                        moved.set(index, null);
+
+                        // 이 좌표는 이미 충돌한 위치
+                        occupied[key] = -1;
+                    } else {
+                    	answer += atom.energy;
+                    }
 				}
 				
-				List<Atom> nextAtoms = new ArrayList<>();
-				
-				for (List<Atom> list : map.values()) {
+				List<Atom> nextAtoms = new ArrayList<>(moved.size());
 
-				    if (list.size() >= 2) {
-				        for (Atom atom : list) {
-				            answer += atom.energy;
-				        }
-				    } else {
-				        nextAtoms.add(list.get(0));
-				    }
-				}
+                for (Atom atom : moved) {
+                    if (atom != null) {
+                        nextAtoms.add(atom);
+                    }
+                }
 				
-				atoms = nextAtoms;
+				for (int i = 0; i < touchedCount; i++) {
+                    occupied[touched[i]] = 0;
+                }
+
+                atoms = nextAtoms;
 			}
-			System.out.println("#" + tc + " " + answer);
+			
+			sb.append('#').append(tc).append(' ').append(answer).append('\n');
 		}
-	
+		
+		System.out.print(sb);
 	}
 }
