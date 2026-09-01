@@ -13,6 +13,7 @@ public class Solution {
 			for (int n=0;n<N;n++) {
 				prices[n]=Integer.parseInt(sb.nextToken());
 			}
+			
 			long max_price=0;
 			long profit=0;
             
