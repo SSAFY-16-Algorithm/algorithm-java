@@ -20,5 +20,6 @@
 	<classpathentry kind="src" path="주차별_문제풀이/3주차/S5648"/>
 	<classpathentry kind="src" path="주차별_문제풀이/4주차/S4408"/>
 	<classpathentry kind="src" path="주차별_문제풀이/4주차/P42860"/>
+	<classpathentry kind="src" path="주차별_문제풀이/4주차/P42885"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
