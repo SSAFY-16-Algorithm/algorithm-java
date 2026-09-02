@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="주차별_문제풀이/1주차/P42579"/>
+	<classpathentry kind="src" path="주차별_문제풀이/1주차/P42627"/>
+	<classpathentry kind="src" path="주차별_문제풀이/1주차/P42628"/>
+	<classpathentry kind="src" path="주차별_문제풀이/1주차/P81303"/>
+	<classpathentry kind="src" path="주차별_문제풀이/1주차/S1954"/>
+	<classpathentry kind="src" path="주차별_문제풀이/2주차/S1226"/>
+	<classpathentry kind="src" path="주차별_문제풀이/2주차/S2806"/>
+	<classpathentry kind="src" path="주차별_문제풀이/2주차/S4193"/>
+	<classpathentry kind="src" path="주차별_문제풀이/2주차/S7733"/>
+	<classpathentry kind="src" path="주차별_문제풀이/2주차/S7793"/>
+	<classpathentry excluding="C2025H2AM1/|P87391/|S5648/|S1907/|P5648/|P468374/" kind="src" path="주차별_문제풀이/3주차"/>
+	<classpathentry kind="src" path="주차별_문제풀이/3주차/C2025H2AM1"/>
+	<classpathentry kind="src" path="주차별_문제풀이/3주차/P468374"/>
+	<classpathentry kind="src" path="주차별_문제풀이/3주차/P5648"/>
+	<classpathentry kind="src" path="주차별_문제풀이/3주차/P87391"/>
+	<classpathentry kind="src" path="주차별_문제풀이/3주차/S1907"/>
+	<classpathentry kind="src" path="주차별_문제풀이/3주차/S5648"/>
+	<classpathentry kind="src" path="주차별_문제풀이/4주차/S4408"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
