@@ -8,76 +8,64 @@ public class Solution {
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder output = new StringBuilder();
-		StringTokenizer st;
 		
 		// 테스트 케이스 개수
 		int T = Integer.parseInt(br.readLine());
 		
 		for (int testCase = 1; testCase <= T; testCase++) {
 			
-			st = new StringTokenizer(br.readLine());
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			
 			int P = Integer.parseInt(st.nextToken());
 			int Pa = Integer.parseInt(st.nextToken());
 			int Pb = Integer.parseInt(st.nextToken());
+			
+			int countA = binarySearchCount(P, Pa);
+			int countB = binarySearchCount(P, Pb);
+			
 			char result;
 			
-			// 이진 탐색 코드를 사용하면 각각 Pa와 Pb를 찾는 것까지는 가능
-			// 1. while문을 두번 돌릴 것인가? 따로?
-			// 한번 탐색하면 count를 1개씩 올리자.
-			// ======== 문제 풀이 코드 =========
-			
-			int lowPa = 1;
-			int highPa = P;
-			int countPa = 0;
-			
-			while (lowPa <= highPa) {
-				int mid = lowPa + (highPa - lowPa) / 2;
-				if (mid == Pa) {
-					countPa += 1;
-					break;
-				} else if (mid < Pa) {
-					countPa += 1;
-					lowPa = mid;
-				} else {
-					countPa += 1;
-					highPa = mid;
-				}
-			}
-			
-			int lowPb = 1;
-			int highPb = P;
-			int countPb = 0;
-			
-			while (lowPb <= highPb) {
-				int mid = lowPb + (highPb - lowPb) / 2;
-				if (mid == Pb) {
-					countPb += 1;
-					break;
-				} else if (mid < Pb) {
-					countPb += 1;
-					lowPb = mid;
-				} else {
-					countPb += 1;
-					highPb = mid;
-				}
-			}
-			
-			if (countPa < countPb) {
+			if (countA < countB) {
 				result = 'A';
-			} else if (countPa > countPb) {
+			} else if (countA > countB) {
 				result = 'B';
 			} else {
 				result = '0';
 			}
-			
-			// ======== 문제 풀이 코드 =========
-			
+		
 			output.append("#").append(testCase).append(" ").append(result).append('\n');
 			
 		}
 		
 		System.out.print(output);
 	
+	}
+	
+	static int binarySearchCount(int P, int target) {
+		
+		int low = 1;
+		int high = P;
+		int count = 0;
+		
+		while (low <= high) {
+			
+			int mid = low + (high - low) / 2;
+			
+			count++;
+			
+			if (mid == target) {
+				break;
+			}
+			
+			if (mid < target) {
+				low = mid;
+			} else {
+				high = mid;
+			}
+		
+		}
+		
+		return count;
 	}
 
 }
