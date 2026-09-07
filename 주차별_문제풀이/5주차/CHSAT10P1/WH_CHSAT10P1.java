@@ -14,9 +14,6 @@ public class Main {
 
         Arrays.sort(positions);
 
-        
-
-        // Please write your code here.
         //ArrayList<Integer> candidates=new ArrayList<>();
         // for (int i=1;i<=positions[N-1]<i++){
         //     candidates.add(i); //보수 패치의 길이 후보
