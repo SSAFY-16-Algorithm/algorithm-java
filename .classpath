@@ -27,5 +27,6 @@
 	<classpathentry kind="src" path="주차별_문제풀이/5주차/P64062"/>
 	<classpathentry kind="src" path="주차별_문제풀이/5주차/CHSAT10P1"/>
 	<classpathentry kind="src" path="주차별_문제풀이/5주차/P72412"/>
+	<classpathentry kind="src" path="주차별_문제풀이/5주차/S19645"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
