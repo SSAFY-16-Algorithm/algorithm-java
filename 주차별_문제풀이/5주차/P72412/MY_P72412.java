@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,11 @@ public class MY_P72412 {
 		// 각 info 별로 가능한 모든 키에 대해 점수 추가하기
 		for (int i = 0; i < info.length; i++) {
 			addScore(info[i]);
+		}
+		
+		// 모든 리스트 다시 정렬
+		for (List<Integer> list: scores.values()) {
+			Collections.sort(list);
 		}
 
 		// 키 조합을 잘 만들었는지 확인하기
@@ -38,14 +44,13 @@ public class MY_P72412 {
 			int num = Integer.parseInt(st.nextToken());
 
 //			System.out.println("찾고자 하는 키 : " + key + ", 찾고자 하는 숫자: " + num);
-			scores.get(key).sort(null);
-//			System.out.println(scores.get(key).toString());
 
 			if (!scores.containsKey(key))
 				answer[i] = 0;
 			else {
+//				System.out.println(scores.get(key).toString());
 				arr = scores.get(key);
-				answer[i] = arr.size() - binarySearch(0, arr.size() - 1, num);
+				answer[i] = arr.size() - binarySearch(0, arr.size(), num);
 				
 			}
 		}
