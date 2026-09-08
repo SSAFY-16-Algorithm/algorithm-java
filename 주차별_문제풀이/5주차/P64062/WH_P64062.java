@@ -1,5 +1,6 @@
-//정확성 테스트 다 통과했는데 효율성 테스트 다 틀림 아ㅠㅠ
+//수정했는데 정확성 테스트 다 통과했는데 효율성 테스트 다 틀림 아ㅠㅠ
 
+import java.util.*;
 class Solution {
     public int solution(int[] temp, int k) {
         int answer = 0;
@@ -13,8 +14,10 @@ class Solution {
         }
         
         while (true) {
+            //시작점에서 첫 출발
             int cur_idx = 0;
             boolean complete = false;
+            ArrayList<Integer> visited_idx=new ArrayList<>();
             
             while (true) {
                 boolean moved = false;
@@ -32,6 +35,7 @@ class Solution {
                     if (stones[cur_idx + i] != 0) {
                         stones[cur_idx + i]--;
                         cur_idx = cur_idx + i;
+                        visited_idx.add(cur_idx);
                         moved = true;
                         break;
                     }
@@ -40,6 +44,15 @@ class Solution {
                 // 이번 사람이 건넘
                 if (complete) {
                     answer++;
+                    //이 사람이 이동했던 인덱스들이 저장된 arraylist 사용 -> 참조값 중 min 찾아서 그만큼 다 빼줌 
+                    int min_num=Integer.MAX_VALUE;
+                    for (int i=0;i<visited_idx.size();i++){
+                        min_num=stones[visited_idx.get(i)]<min_num?stones[visited_idx.get(i)]:min_num;
+                    }
+                    for (int i=0;i<visited_idx.size();i++){
+                        stones[visited_idx.get(i)]-=min_num;
+                    }
+                    answer+=min_num;
                     break;
                 }
                 
