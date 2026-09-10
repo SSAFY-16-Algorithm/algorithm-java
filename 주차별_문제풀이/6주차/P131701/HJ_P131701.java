@@ -2,45 +2,50 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+// ¿¬¼Ó ºÎºĞ ¼ö¿­ ÇÕÀÇ °³¼ö => ½½¶óÀÌµù À©µµ¿ì·Î Á¢±Ù
 class Solution {
     
 	public static int solution(int[] elements) {
     	
-		int len = elements.length; // ìŠ¬ë¼ì´ë”© ìœˆë„ìš° ì œí•œ ì¸ë±ìŠ¤
-		// elements ë°°ì—´ì„ í•œë²ˆ ë” ì´ì–´ ë¶™ì—¬ì„œ ì›í˜• ìˆ˜ì—´ í˜•íƒœë¡œ ë§Œë“¤ê¸°
+		// len º¯¼ö¸¦ µû·Î ¼³Á¤ÇÑ ÀÌÀ¯ : elements ¹è¿­ ÀÚÃ¼¸¦ 2¹è·Î ´Ã¸®±â Àü¿¡ ±âÁ¸ÀÇ ±æÀÌ¸¦ ±â·ÏÇØµÎ±â À§ÇÔ
+		int len = elements.length; // ½½¶óÀÌµù À©µµ¿ì Á¦ÇÑ ÀÎµ¦½º
+		
+		// elements ¹è¿­À» ÇÑ¹ø ´õ ÀÌ¾î ºÙ¿©¼­ ¿øÇü ¼ö¿­ ÇüÅÂ·Î ¸¸µé±â
     	elements = Arrays.copyOf(elements, len * 2);
     	System.arraycopy(elements, 0, elements, len, len);
     	
+    	// elements ¹è¿­ÀÌ 2¹è°¡ Àß µÇ¾ú´ÂÁö È®ÀÎÇÏ±â
     	System.out.println(Arrays.toString(elements));
     	
+    	// ÀüÃ¼ ¿¬¼Ó ºÎºĞ ¼ö¿­ ÇÕµéÀ» ÀúÀåÇÏ°í, Áßº¹µÇ´Â °ÍÀ» °É·¯³»±â À§ÇØ setÀ» »ç¿ë 
     	Set<Integer> set = new HashSet<>();
     	
-    	// í™•ì¸í•  ë¶€ë¶„ ìˆ˜ì—´ì˜ ê¸¸ì´ë¥¼ 1ë¶€í„° elements ì „ì²´ ê¸¸ì´ë§Œí¼ í™•ì¸í•´ì•¼í•¨.
+    	// È®ÀÎÇÒ ºÎºĞ ¼ö¿­ÀÇ ±æÀÌ¸¦ 1ºÎÅÍ elements ÀüÃ¼ ±æÀÌ¸¸Å­ È®ÀÎÇØ¾ßÇÔ.
+    	// ±æÀÌ°¡ 1ºÎÅÍ ±âÁ¸ elements ¹è¿­ÀÇ ±æÀÌ¸¸Å­ ¿¬¼Ó ºÎºĞ ¼ö¿­À» ¼³Á¤ÇÒ ¼ö ÀÖ±â ¶§¹®
     	for (int i = 1; i <= len; i++) {
     		
-    		// i ê¸¸ì´ë§Œí¼ ì´ì œ elements ìˆ˜ì—´ì„ ëŒë©´ì„œ í™•ì¸í•´ì•¼ í•œë‹¤.
-    		// ë¨¼ì € i ê¸¸ì´ë§Œí¼ì˜ êµ¬ê°„í•©ì„ ë§Œë“ ë‹¤.
+    		// i ±æÀÌ¸¸Å­ ÀÌÁ¦ elements ¼ö¿­À» µ¹¸é¼­ È®ÀÎÇØ¾ß ÇÑ´Ù.
+    		// ¸ÕÀú i ±æÀÌ¸¸Å­ÀÇ ±¸°£ÇÕÀ» ¸¸µç´Ù.
     		int windowSum = 0;
     		for (int j = 0; j < i; j++) {
     			windowSum += elements[j];
     		}
-    		
-    		//System.out.println(windowSum);
-    		
-    		// ì²˜ìŒ êµ¬ê°„í•©ì„ setì— ë„£ì–´ì£¼ê¸°
+    		    		
+    		// Ã³À½ ±¸°£ÇÕÀ» set¿¡ ³Ö¾îÁÖ±â
     		set.add(windowSum);
     		
-    		// i ê¸¸ì´ë§Œí¼ ì´ì œ elements ìˆ˜ì—´ì„ ëŒë©´ì„œ í™•ì¸í•´ì•¼ í•œë‹¤.
+    		// ±æÀÌ i¸¸Å­ ÀÌÁ¦ elements ¼ö¿­À» µ¹¸é¼­ È®ÀÎÇØ¾ß ÇÑ´Ù.
     		for (int right = i; right < len+i-1; right++) {
+    			// ½½¶óÀÌµù À©µµ¿ì°¡ 1Ä­¾¿ ¿À¸¥ÂÊÀ¸·Î ÀÌµ¿ÇÒ ¶§ »õ·Î µé¾î¿À´Â °ªÀ» windowSum¿¡ ´õÇØÁÜ
     			windowSum += elements[right];
+    			// ½½¶óÀÌµù À©µµ¿ì°¡ 1Ä­¾¿ ¿À¸¥ÂÊÀ¸·Î ÀÌµ¿ÇÏ¸é ±âÁ¸ÀÇ °¡Àå ¿ŞÂÊ¿¡ ÀÖ´ø °ªÀÌ ½½¶óÀÌµù À©µµ¿ì¿¡¼­ ºüÁü
     			windowSum -= elements[right - i];
-    			//System.out.println(windowSum);
     			set.add(windowSum);
     		}
     		
-    		//System.out.println(set.toArray());
     	}
     	
+    	// ¹®Á¦¿¡¼­ ¿øÇÏ´Â Á¤´äÀº ¿¬¼Ó ºÎºĞ ¼ö¿­·ÎºÎÅÍ ³ª¿Ã ¼ö ÀÖ´Â ÇÕ ¼ıÀÚÀÇ °³¼ö
         int answer = set.size();
         
         return answer;
