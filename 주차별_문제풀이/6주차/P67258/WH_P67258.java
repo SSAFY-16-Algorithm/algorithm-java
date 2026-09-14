@@ -17,41 +17,30 @@ import java.util.*;
         
        // 구간 탐색 시작 
         int left=0;
-        int right=1;
-        
-        //int min_length=right-left;
-        
-        bag.put(gems[left],1);
-        int types=1;
+        int types=0;
+        int min_length = Integer.MAX_VALUE;
         
         // right++ 순회
-        while(right<gems.length){
-            //종류 꽉 차면 
-            if(types==jewels.size()){
-                //left++..
-                while(true){
-                    int temp=bag.get(gems[left]);
-                    if (temp>1){
-                        bag.put(gems[left], temp-1);
-                        left++;
-                    }else{
-                        break;
-                    }
-                }           
-            }
-            
-            //종류 꽉 차기 전
+        for(int right=0;right<gems.length;right++){
+             //추가된 right에 대해 개수 추가해줌 
             int temp=bag.get(gems[right]);
             if (temp==0) types++;
             bag.put(gems[right], temp+1);
-            right++;
+            
+            //만약 전종류 보유시 left를 늘림 
+            if(types==jewels.size()){
+                while(bag.get(gems[left])>1){
+                    bag.put(gems[left], bag.get(gems[left])-1);
+                    left++;
+                }
+                
+                if (right-left<min_length){
+                    min_length=right-left;
+                    answer[0]=left+1;
+                    answer[1]=right+1;
+                }
+            }   
         }
-        
-        answer[0]=left;
-        answer[1]=right;
-        
         return answer;
     }
 }
-
-//미완성
