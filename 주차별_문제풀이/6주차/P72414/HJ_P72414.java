@@ -1,85 +1,84 @@
 class Solution {
 
-	public String solution(String play_time, String adv_time, String[] logs) {
+    public String solution(String play_time, String adv_time, String[] logs) {
 
-		// play_time : 배열의 최댓값
-		int playSec = toSec(play_time);
-		int advSec = toSec(adv_time);
+        int playDuration = toSeconds(play_time);
+        int adDuration = toSeconds(adv_time);
 
-		// 전체 시청 시각 담은 일차원 배열
-		long[] viewers = new long[playSec + 1];
+        // 각 초마다 시청자 수를 계산하기 위한 배열
+        long[] viewerCount = new long[playDuration + 1];
 
-		// 각 로그를 차분 배열에 기록
-		for (String log : logs) {
-			String[] times = log.split("-");
-			int startTime = toSec(times[0]);
-			int endTime = toSec(times[1]);
+        // 1. 각 시청 로그를 차분 배열에 기록
+        for (String log : logs) {
+            String[] times = log.split("-");
 
-			viewers[startTime]++;
-			viewers[endTime]--;
-		}
+            int start = toSeconds(times[0]);
+            int end = toSeconds(times[1]);
 
-		// 각 초마다 실제 시청자 수를 계산하기 위해 누적합 진행
-		for (int i = 1; i <= playSec; i++) {
-			viewers[i] += viewers[i - 1];
-		}
-		
-		// 슬라이딩 윈도우 적용 전 초기 광고 시청시간 
-		int left = 0;
-		int right = advSec;
-		long currentSum = 0;
-		
-		for(int i = left; i < right; i++) {
-			currentSum += viewers[i];
-		}
-		
-		// 슬라이딩 윈도우를 적용해서 최대 광고 시청 시간이 나올 때마다 광고시작시각 업데이트
-		long maxSum = currentSum;
-		int maxLeft = 0;
-		
-		while (right < playSec) {
-			currentSum -= viewers[left];
-			left++;
-			
-			currentSum += viewers[right];
-			right++;
-			
-			if (currentSum > maxSum) {
-				maxSum = currentSum;
-				maxLeft = left;
-			}
-		}
+            viewerCount[start]++;
+            viewerCount[end]--;
+        }
 
-		String answer = toTime(maxLeft);
-		return answer;
+        // 2. 누적합을 통해 각 초의 실제 시청자 수 계산
+        for (int second = 1; second <= playDuration; second++) {
+            viewerCount[second] += viewerCount[second - 1];
+        }
 
-	}
+        // 3. 광고가 0초에 시작하는 경우의 누적 시청시간 계산
+        long currentWatchTime = 0;
 
-	// HH:MM:SS을 HH, MM, SS로 분할하고 정수형으로 바꿔서 초 계산
-	// 최대 99:99:99를 초로 바꿔도 약 36만 밖에 되지 않음
-	static int toSec(String time) {
+        for (int second = 0; second < adDuration; second++) {
+            currentWatchTime += viewerCount[second];
+        }
 
-		String[] t = time.split(":");
-		int HH = Integer.parseInt(t[0]);
-		int MM = Integer.parseInt(t[1]);
-		int SS = Integer.parseInt(t[2]);
-		int PlayTime = HH * 3600 + MM * 60 + SS;
+        long maxWatchTime = currentWatchTime;
+        int bestStartTime = 0;
 
-		return PlayTime;
+        // 4. 광고 시작 시간을 1초씩 이동시키며 최대 누적 시청시간 탐색
+        for (int start = 1; start + adDuration <= playDuration; start++) {
 
-	}
-	
-	static String toTime(int time) {
-		
-		int HH = time / 3600;
-		time -= (HH*3600);
-		int MM = time / 60;
-		time -= (MM*60);
-		int SS = time;
-		
-		String result = String.format("%02d:%02d:%02d", HH, MM, SS);
-		
-		return result;
-	}
+            // 이전 광고 구간에서 빠지는 1초
+            currentWatchTime -= viewerCount[start - 1];
 
+            // 새 광고 구간에 들어오는 1초
+            currentWatchTime += viewerCount[start + adDuration - 1];
+
+            // 동일한 경우에는 더 빠른 시각을 유지해야 하므로 > 사용
+            if (currentWatchTime > maxWatchTime) {
+                maxWatchTime = currentWatchTime;
+                bestStartTime = start;
+            }
+        }
+
+        return toTimeString(bestStartTime);
+    }
+
+    // HH:MM:SS -> 초
+    private static int toSeconds(String time) {
+
+        String[] parts = time.split(":");
+
+        int hours = Integer.parseInt(parts[0]);
+        int minutes = Integer.parseInt(parts[1]);
+        int seconds = Integer.parseInt(parts[2]);
+
+        return hours * 3600 + minutes * 60 + seconds;
+    }
+
+    // 초 -> HH:MM:SS
+    private static String toTimeString(int seconds) {
+
+        int hours = seconds / 3600;
+        seconds %= 3600;
+
+        int minutes = seconds / 60;
+        int remainSeconds = seconds % 60;
+
+        return String.format(
+                "%02d:%02d:%02d",
+                hours,
+                minutes,
+                remainSeconds
+        );
+    }
 }
