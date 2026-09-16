@@ -27,14 +27,14 @@ class Solution {
 		// 슬라이딩 윈도우 적용 전 초기 광고 시청시간 
 		int left = 0;
 		int right = advSec;
-		int currentSum = 0;
+		long currentSum = 0;
 		
 		for(int i = left; i < right; i++) {
 			currentSum += viewers[i];
 		}
 		
 		// 슬라이딩 윈도우를 적용해서 최대 광고 시청 시간이 나올 때마다 광고시작시각 업데이트
-		int maxSum = currentSum;
+		long maxSum = currentSum;
 		int maxLeft = 0;
 		
 		while (right < playSec) {
