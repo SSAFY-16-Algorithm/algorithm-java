@@ -1,6 +1,6 @@
 import java.util.*;
 
-class Solution {
+class YJ_P67259 {
     static int[] dx = {-1,1,0,0};
 	static int[] dy = {0,0,-1,1};
 	static int N; 

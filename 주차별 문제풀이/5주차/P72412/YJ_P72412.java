@@ -1,6 +1,6 @@
 import java.util.*;
 
-class Solution {
+class YJ_P72412 {
     static HashMap<String, ArrayList<Integer>> map;
     
     public int[] solution(String[] info, String[] query) {
