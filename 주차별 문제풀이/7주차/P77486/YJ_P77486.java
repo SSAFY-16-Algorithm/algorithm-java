@@ -1,6 +1,6 @@
 import java.util.*;
 
-class Solution {
+class YJ_P77486 {
     static HashMap<String, String> relation;
 	static HashMap<String, Integer> profits;
     
