@@ -50,5 +50,5 @@ public class Solution {
 			return Integer.parseInt(tree[idx]);
 		}
 	}
-}
+} 
  
