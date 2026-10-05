@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
+public class MY_C2025ACPC {
 
 	static int N, M, LOG;
 
