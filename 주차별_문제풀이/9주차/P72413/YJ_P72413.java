@@ -2,6 +2,7 @@
 import java.util.*;
 
 public class YJ_P72413 {
+	
     public static void main(String[] args) {
         int n = 6;
         int s = 4;
@@ -19,7 +20,7 @@ public class YJ_P72413 {
         
         // 1. fares 를 기준으로 각 지점간 최단거리를 dist 배열에 저장한다(플로이드-워셜 사용)
         // 시작점이 정해져 있어서 처음엔 다익스트라로 풀어야 되나 생각을 했는데 어차피 뒤에서 각 지점 간의 최소 길이가 필요하므로
-        // 플로이드 - 워셜 배열 한 번만 쓰기로 결정.
+        // 플로이드 - 워셜 배열 한 번만 쓰기로 결정
         
         int[][] dist = new int[n+1][n+1];
         
