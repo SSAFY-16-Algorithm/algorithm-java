@@ -27,7 +27,6 @@ public class YJ_P49191 {
         	dist[A][B] = 1;
         	dist[B][A] = -1;
         }
-        
         int answer = floydWarshall(dist, n);
         
         return answer;
@@ -71,4 +70,4 @@ public class YJ_P49191 {
 // 플로이드-워셜
 // [A, B] -> A가 B를 이겼다. 
 // 순위가 내가 더 뒤면 +1, 모르면 0, 내가 더 앞이면 1
-// -> 알고리즘을 다 돈다.
+// -> 알고리즘을 다 돈다
