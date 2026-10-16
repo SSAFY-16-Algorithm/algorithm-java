@@ -116,6 +116,7 @@
     | Chapter | C숫자 | Chapter 번호 |
     | 기본문제 | B | Basic |
     | 연습문제 | P | Practice |
+    | 도전문제 | C | Challange |
     | 테스트 문제 | T | Test |
     | 문제 순서 | 숫자 | 해당 유형 내 문제 순서 |
 
