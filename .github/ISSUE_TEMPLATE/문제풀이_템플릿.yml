@@ -12,6 +12,7 @@ body:
         - 프로그래머스
         - SWEA
         - 코드트리
+        - 백준
     validations:
       required: true
 
