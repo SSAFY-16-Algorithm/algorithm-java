@@ -24,6 +24,7 @@
 
 | 플랫폼 | 난이도 |
 | ------- | ------ |
+| [BaekJoon](https://acmicpc.net/problemset) | 골드5 ~ 골드 1 |
 | [Programmers](https://school.programmers.co.kr/learn/challenges) | Lv.2 ~ Lv.3 (정답률 40% 이상) |
 | [SWEA](https://swexpertacademy.com/main/main.do) | D3 ~ D5 수준 |
 | [Codetree](https://www.codetree.ai/ko/frequent-problems) | 적정 난이도 선정 |
@@ -76,9 +77,10 @@
 
 ```text
 주차/
-└── S문제번호 또는 P문제번호/
+└── S문제번호 또는 P문제번호 또는 BJ문제번호/
     └── 이름이니셜_S문제번호.java
     └── 이름이니셜_P문제번호.java
+    └── 이름이니셜_BJ문제번호.java
 ```
 
 - 예시
@@ -88,11 +90,15 @@
 ├── S1234/
 │   ├── YJ_S1234.java
 │   └── GE_S1234.java
-└── P56789/
-    ├── YJ_P56789.java
-    └── GE_P56789.java
+├── P56789/
+|   ├── YJ_P56789.java
+|   └── GE_P56789.java
+└── BJ20055/
+    ├── YJ_BJ56789.java
+    └── GE_BJ56789.java
 ```
 
+- `BJ`: BaekJoon
 - `S` : SWEA
 - `P` : 프로그래머스
 - `C` : Codetree
